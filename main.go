@@ -100,8 +100,7 @@ func (l *LogScanner) Scan(line string) {
 		fmt.Printf("failed to load time location: %s\n", err)
 	} else {
 		now = now.In(loc)
-	}
-	// Skip lines that are not close to current time, so there isn't a flood of notices
+	} // Skip lines that are not close to current time, so there isn't a flood of notices
 	// every time the service starts.
 	if now.Sub(ll.Time) > 10*time.Second {
 		return
@@ -114,6 +113,9 @@ func (l *LogScanner) Scan(line string) {
 		l.SendNotices(fmt.Sprintf("%s\n%s online\n", ll.Time, user))
 	}
 	user = ScanLogout(ll.Line)
+	if l.MutedUser[user] {
+		return
+	}
 	if user != "" {
 		l.SendNotices(fmt.Sprintf("%s\n%s offline\n", ll.Time, user))
 	}
