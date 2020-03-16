@@ -1,0 +1,13 @@
+[Unit]
+Description=minewatchd tails a minecraft server console file, and sends login notices
+After=network-online.target mscs.service
+
+[Service]
+User=minecraft
+ExecStart=/opt/mscs/bin/minewatchd
+KillMode=process
+Restart=on-failure
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
